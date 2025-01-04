@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Design - Game Themed</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        .game-name { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 2rem; font-family: Arial, sans-serif; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="game-name">Nama Game Anda</div> <!-- Ganti "Nama Game Anda" dengan nama yang ingin ditampilkan -->
+
+    <script>
+        // Scene, Camera, Renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Background Image (masukkan gambar karakter sebagai background)
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('https://path_to_image.jpg'); // Ganti dengan URL gambar karakter game
+        scene.background = texture;
+
+        // Text 3D
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            const geometry = new THREE.TextGeometry('Nama Game Anda', {
+                font: font,
+                size: 10,
+                height: 2,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.5,
+                bevelSize: 1
+            });
+
+            const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const textMesh = new THREE.Mesh(geometry, material);
+            scene.add(textMesh);
+
+            // Position text
+            textMesh.position.x = -25;
+            textMesh.position.y = 0;
+            textMesh.position.z = -50;
+
+            // Rotate text
+            function animate() {
+                requestAnimationFrame(animate);
+                textMesh.rotation.x += 0.01;
+                textMesh.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        });
+
+        // Camera position
+        camera.position.z = 100;
+
+        // Resize renderer on window resize
+        window.addEventListener('resize', function () {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
